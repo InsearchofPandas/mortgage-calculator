@@ -8,36 +8,64 @@ class App extends Component {
     super(props);
     this.state = {
       loanAmount: '',
+      loanAmountDisplay:'',
       loanRate: 3.0,
       loanYears: 30,
       statusMessage: "Enter the loan amount"
     }
   }
-  handleChange = event => {
-    switch (event.target.name) {
-      case "loanAmount":
-        let loan = event.target.value.replace(/','/g, '')
-         loan = loan.replace(/" "/g, "")
-        if (loan < 10000)
-          this.setState({loanAmount: event.target.value, statusMessage: "Minimum Loan Amount 10,000"});
-        else if (event.target.value.length > 11)
-          this.setState({loanAmount: this.state.loanAmount, statusMessage: "Maximum Input Exceeded"});
-        else if (loan >= 10000)
-          this.setState({loanAmount: event.target.value, statusMessage: ""});
-        break;
-      case "loanRate":
-        this.setState({loanRate: event.target.value})
-        break;
-      case "loanYears":
-        this.setState({loanYears: event.target.value})
-        break
-      default:
+handleChange = event => {
+  switch (event.target.name) {
+    case "loanAmount":
+      let statusMessage
+      let loanAmountDisplay
+      let loanAmount = event.target.value
+      loanAmount = event.target.value.replace(/ /g, 'k')
+        loanAmount = loanAmount.replace(/,/g, '')
+        console.log(loanAmount)
+      if (isNaN(loanAmount) === true) {
+        statusMessage = "Only Numbers Accepted"
+        loanAmountDisplay = this.state.loanAmountDisplay
+       } else if (event.target.value.length > 11) {
+         loanAmountDisplay = this.state.loanAmountDisplay
+         statusMessage = "Max Input Amount"
+       }  else if (loanAmount < 10000) {
+          loanAmountDisplay = loanAmount
+          statusMessage = "Minimum Loan Amount 10,000"
+        }  else if (loanAmount >= 10000) {
+          loanAmountDisplay = loanAmount
+          statusMessage = ""
+        }
 
-    }
+        this.setState({
+          loanAmount: loanAmount,
+          loanAmountDisplay: loanAmountDisplay,
+           statusMessage: statusMessage
+         })
+
+      break;
+    case "loanRate":
+      this.setState({loanRate: event.target.value})
+      break;
+    case "loanYears":
+      this.setState({loanYears: event.target.value})
+      break
+    default:
+
   }
+}
 
   render() {
+// update loan amount to display with commas
+    let outLoanAmountDisplay = this.state.loanAmountDisplay
+          outLoanAmountDisplay = Math.floor(outLoanAmountDisplay)
+      outLoanAmountDisplay = outLoanAmountDisplay.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+          })
+       console.log()
 
+// loan  calculations
     let monthlyPayment,
       totalPayment,
       displayMonthlyPayment,
@@ -59,7 +87,13 @@ class App extends Component {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       })
-    }
+    }     if (isNaN(monthlyPayment)) {
+          displayMonthlyPayment = ""
+        }
+        if (isNaN(totalPayment)) {
+          displayTotalPayment = ""
+        }
+
 
     return (<div className="bg-blue-lightest h-screen">
 
@@ -76,7 +110,7 @@ class App extends Component {
           <div className="w-3/5 text-center bg-grey-dark p-3 m-1">
             Loan Amount
           </div>
-          <TextBox name="loanAmount" value={this.state.loanAmount} onChange={this.handleChange}/>
+          <TextBox name="loanAmount" value={outLoanAmountDisplay}  onChange={this.handleChange}/>
         </div>
       </div>
 
