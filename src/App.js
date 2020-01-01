@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loanAmount: '',
+      loanAmount: 0,
       loanAmountDisplay: '',
       loanRate: 3.0,
       loanYears: 30,
@@ -20,7 +20,7 @@ class App extends Component {
         let statusMessage
         let loanAmountDisplay
         let loanAmount = event.target.value
-        loanAmount = event.target.value.replace(/ /g, 'k')
+        loanAmount = event.target.value.replace(/ /g, '')
         loanAmount = loanAmount.replace(/,/g, '')
         if (isNaN(loanAmount) === true) {
           statusMessage = "Only Numbers Accepted"
@@ -28,10 +28,10 @@ class App extends Component {
         } else if (event.target.value.length > 11) {
           loanAmountDisplay = this.state.loanAmountDisplay
           statusMessage = "Max Input Amount"
-        } else if (loanAmount < 10000) {
+        } else if (loanAmount < 1000) {
           loanAmountDisplay = loanAmount
-          statusMessage = "Minimum Loan Amount 10,000"
-        } else if (loanAmount >= 10000) {
+          statusMessage = "Minimum Loan Amount 1,000"
+        } else if (loanAmount >= 1000) {
           loanAmountDisplay = loanAmount
           statusMessage = ""
         }
@@ -89,10 +89,10 @@ class App extends Component {
         displayTotalPayment = ""
       }
 
-      return (<div className="bg-blue-lightest h-screen">
+      return (<div className="h-screen">
 
         <header className="flex">
-          <h1 className="w-full bg-blue-lighter text-center my-6 py-4 font-normal ">Mortgage Payment Calculator</h1>
+          <h1 className="w-full bg-grey-lighter text-center my-6 py-4 font-normal ">Mortgage Payment Calculator</h1>
         </header>
 
         <div className="flex justify-center mb-3 h-4">
@@ -191,6 +191,15 @@ class App extends Component {
             <div className="w-full lg:w-1/2 text-center bg-grey-light p-3 m-1">{displayTotalPayment}</div>
           </div>
         </div>
+
+        <footer class="flex justify-center flex-col lg:flex-row w-full py-8 mt-8 bg-grey-lighter">
+          <a href="https://kylehumphrey.com" target="_blank" rel="noopener noreferrer" className="text-black no-underline px-4">
+            Made by Kyle Humphrey
+          </a>
+          <a href="https://github.com/InsearchofPandas/mortgage-calculator" target="_blank" rel="noopener noreferrer" className="text-black no-underline px-4">
+            View Code on GitHub
+          </a>
+        </footer>
 
       </div>)
     }
